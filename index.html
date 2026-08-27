@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Popice</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<style>
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #fafafa;
+  margin:0;
+      padding:0;
+  color: #1a1a1a;
+}
+
+.nav{
+  display:flex;
+      justify-content: space-between;
+  align-items:center;
+    padding: 20px 60px;
+  border-bottom: 1px solid #eaeaea;
+      background: white;
+}
+
+.nav .logo{
+  font-weight: 600;
+    font-size: 18px;
+}
+
+.nav .logo span{
+      color: #7b61ff;
+}
+
+.nav button{
+  background-color: #7b61ff;
+    color:white;
+      border:none;
+  padding: 10px 20px;
+  border-radius: 8px;
+    font-size:14px;
+      cursor:pointer;
+}
+
+.hero{
+    text-align:center;
+  padding: 80px 20px 60px 20px;
+}
+
+.hero h1{
+      font-size: 48px;
+  margin-bottom: 10px;
+    font-weight: 600;
+  letter-spacing: -1px;
+}
+
+.hero p{
+    color: #666;
+  font-size: 16px;
+      max-width: 500px;
+  margin: 0 auto;
+}
+
+.container{
+  max-width: 1100px;
+      margin: 0 auto;
+  padding: 40px 20px 80px 20px;
+}
+
+.kenapa{
+  display:flex;
+    gap: 16px;
+  justify-content:center;
+      flex-wrap:wrap;
+  margin-bottom: 50px;
+}
+
+.kenapa .item{
+    text-align:center;
+  max-width: 200px;
+}
+
+.kenapa .item .ikon{
+      font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.kenapa .item h4{
+  margin: 4px 0;
+    font-size:14px;
+}
+
+.kenapa .item p{
+      font-size:12px;
+  color:#777;
+    margin:0;
+}
+
+.grid{
+  display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+.card{
+      background: white;
+  border: 1px solid #eee;
+    border-radius: 16px;
+  padding: 20px;
+    transition: 0.2s;
+    position: relative;
+}
+
+@media (hover: hover){
+  .card:hover{
+    border-color: #d8d0ff;
+    transform: translateY(-2px);
+  }
+  .qtybtn:hover{
+        background:#f0ecff;
+    border-color:#7b61ff;
+  }
+}
+
+.card img{
+  width:100%;
+    border-radius: 10px;
+  margin-bottom: 14px;
+      background: #f4f2ff;
+}
+
+.card h3{
+    margin: 0 0 4px 0;
+  font-size:16px;
+      font-weight:600;
+}
+
+.card .desc{
+  font-size:13px;
+    color:#888;
+  margin-bottom: 4px;
+}
+
+.rating{
+  font-size:12px;
+    color:#e8a33e;
+  margin-bottom: 10px;
+}
+
+.row{
+  display:flex;
+      justify-content: space-between;
+  align-items:center;
+}
+
+.price{
+      font-size:17px;
+  font-weight:600;
+}
+
+.badge{
+    font-size: 11px;
+  background: #f0ecff;
+      color: #7b61ff;
+  padding: 3px 8px;
+    border-radius: 20px;
+  margin-bottom: 8px;
+      display:inline-block;
+}
+
+.habisbadge{
+    font-size: 11px;
+  background: #ffe9e9;
+      color: #d33;
+  padding: 3px 8px;
+    border-radius: 20px;
+  margin-bottom: 8px;
+      display:inline-block;
+}
+
+.qtybox{
+  display:flex;
+    align-items:center;
+  gap: 8px;
+}
+
+.qtybtn{
+  border: 1px solid #ddd;
+    background:white;
+  width: 30px;
+      height:30px;
+  border-radius: 8px;
+    cursor:pointer;
+  font-size:16px;
+  touch-action: manipulation;
+}
+
+.qtybtn:disabled{
+  opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.qtybtn:active{
+  background:#f0ecff;
+    border-color:#7b61ff;
+}
+
+.qtynum{
+    font-size:14px;
+  font-weight:600;
+      min-width: 16px;
+  text-align:center;
+}
+
+.cart{
+    position: sticky;
+  bottom: 20px;
+      max-width: 300px;
+  margin: 40px auto 0 auto;
+    background: #1a1a1a;
+  color:white;
+      padding: 14px 20px;
+  border-radius: 12px;
+    text-align:center;
+  font-size:14px;
+}
+
+.wafloat{
+  position: fixed;
+    bottom: 20px;
+  right: 20px;
+      background: #25D366;
+  color:white;
+    width: 50px;
+  height:50px;
+      border-radius: 50%;
+  display:flex;
+    align-items:center;
+  justify-content:center;
+      font-size: 24px;
+  text-decoration:none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.footer{
+      text-align:center;
+  padding: 30px;
+    color: #999;
+  font-size:12px;
+  border-top: 1px solid #eee;
+}
+
+.footer a{
+    color: #aaa;
+  text-decoration: underline;
+      cursor:pointer;
+}
+
+.toast{
+  position: fixed;
+    top: 20px;
+  left: 50%;
+      transform: translateX(-50%);
+  background: #1a1a1a;
+    color:white;
+  padding: 10px 18px;
+      border-radius: 8px;
+  font-size:13px;
+    display:none;
+  z-index: 999;
+}
+
+.adminwrap{
+  display:none;
+    max-width: 500px;
+  margin: 0 auto 60px auto;
+    padding: 0 20px;
+}
+
+.adminbox{
+    background: white;
+  border: 1px solid #eee;
+      border-radius: 16px;
+  padding: 20px;
+}
+
+.adminbox h3{
+    margin-top:0;
+}
+
+.statgrid{
+  display:grid;
+    grid-template-columns: 1fr 1fr;
+  gap: 10px;
+    margin-bottom: 16px;
+}
+
+.statbox{
+  background: #f7f5ff;
+    border-radius: 10px;
+  padding: 12px;
+      text-align:center;
+}
+
+.statbox .num{
+    font-size:18px;
+  font-weight:600;
+      color:#7b61ff;
+}
+
+.statbox .lbl{
+    font-size:11px;
+  color:#888;
+}
+
+.riwayat{
+  font-size:13px;
+    border-top: 1px solid #eee;
+  padding-top: 10px;
+    max-height: 220px;
+  overflow-y:auto;
+}
+
+.riwayat .baris{
+    padding: 6px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.riwayat .baris .waktu{
+    font-size:11px;
+  color:#aaa;
+}
+
+.catatan{
+  font-size:11px;
+    color:#aaa;
+  margin-top: 10px;
+}
+
+@media (max-width: 600px){
+
+  .nav{
+      padding: 16px 20px;
+  }
+
+  .nav .logo{
+    font-size:16px;
+  }
+
+    .nav button{
+    padding: 8px 14px;
+      font-size:13px;
+  }
+
+  .hero{
+      padding: 50px 20px 40px 20px;
+  }
+
+  .hero h1{
+    font-size: 30px;
+        letter-spacing: -0.5px;
+  }
+
+    .hero p{
+    font-size:14px;
+  }
+
+  .container{
+      padding: 20px 16px 60px 16px;
+  }
+
+  .grid{
+    grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+  }
+
+  .card{
+    padding: 12px;
+      border-radius: 12px;
+  }
+
+  .card img{
+      margin-bottom: 10px;
+  }
+
+  .card h3{
+    font-size:14px;
+  }
+
+    .card .desc{
+    font-size:11px;
+  }
+
+  .price{
+      font-size:15px;
+  }
+
+  .qtybtn{
+    width: 28px;
+      height:28px;
+    font-size:14px;
+  }
+
+  .cart{
+      max-width: 100%;
+    font-size:13px;
+  }
+
+  .kenapa{
+      gap: 24px;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="logo">pop<span>ice</span></div>
+  <button>pesan sekarang</button>
+</div>
+
+<div class="hero">
+  <h1>es kekinian, rasa asli</h1>
+  <p>umkm rumahan yang bikin popice dingin seger tiap hari, langsung dari dapur ke tanganmu</p>
+</div>
+
+<div class="container">
+
+  <div class="kenapa">
+    <div class="item">
+      <div class="ikon">❄️</div>
+      <h4>dingin higienis</h4>
+      <p>dibungkus rapi, dibekukan pas waktunya</p>
+    </div>
+    <div class="item">
+      <div class="ikon">🍓</div>
+      <h4>bahan asli</h4>
+      <p>gula sama rasa buah nya pas, ga nyekek</p>
+    </div>
+    <div class="item">
+      <div class="ikon">💸</div>
+      <h4>harga hemat</h4>
+      <p>cocok buat jajan tiap hari</p>
+    </div>
+  </div>
+
+  <div class="grid">
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Mangga">
+    <div class="badge">best seller</div>
+    <h3>Popice Mangga</h3>
+    <p class="desc">rasa mangga manis, stok 25 pcs</p>
+    <div class="rating">★★★★★ (120)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Mangga')">-</button>
+        <span class="qtynum" id="qty-Mangga">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Mangga', 25)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Melon">
+      <div class="badge">segar</div>
+    <h3>Popice Melon</h3>
+    <p class="desc">rasa melon adem, stok 18 pcs</p>
+    <div class="rating">★★★★★ (98)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Melon')">-</button>
+        <span class="qtynum" id="qty-Melon">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Melon', 18)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Anggur">
+    <div class="badge">favorit</div>
+      <h3>Popice Anggur</h3>
+    <p class="desc">rasa anggur asem manis, stok 12 pcs</p>
+    <div class="rating">★★★★☆ (76)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Anggur')">-</button>
+        <span class="qtynum" id="qty-Anggur">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Anggur', 12)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Leci">
+    <div class="badge">baru</div>
+    <h3>Popice Leci</h3>
+      <p class="desc">rasa leci wangi, stok 20 pcs</p>
+    <div class="rating">★★★★★ (54)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Leci')">-</button>
+        <span class="qtynum" id="qty-Leci">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Leci', 20)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Strawberry">
+    <div class="badge">best seller</div>
+    <h3>Popice Strawberry</h3>
+    <p class="desc">rasa strawberry manis, stok 30 pcs</p>
+    <div class="rating">★★★★★ (140)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Strawberry')">-</button>
+        <span class="qtynum" id="qty-Strawberry">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Strawberry', 30)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <img src="https://placehold.co/300x220/f0ecff/7b61ff?text=Cokelat">
+    <div class="badge">premium</div>
+    <h3>Popice Cokelat</h3>
+    <p class="desc">rasa cokelat lembut, stok 10 pcs</p>
+    <div class="rating">★★★★☆ (40)</div>
+    <div class="row">
+      <span class="price">Rp 5.000</span>
+      <div class="qtybox">
+        <button class="qtybtn" onclick="kurangProduk('Cokelat')">-</button>
+        <span class="qtynum" id="qty-Cokelat">0</span>
+        <button class="qtybtn" onclick="tambahProduk('Cokelat', 10)">+</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="cart" id="hasilKeranjang">
+    keranjang kosong
+  </div>
+
+  <button id="btnCheckout" onclick="checkoutWa()" style="display:block; margin: 14px auto 0 auto; background-color:#25D366; color:white; border:none; padding: 12px 24px; border-radius: 10px; font-size:14px; cursor:pointer; touch-action: manipulation;">
+    checkout via whatsapp
+  </button>
+
+</div>
+
+<a class="wafloat" href="https://wa.me/6281288848438?text=halo%20ka%20mau%20tanya%20tentang%20popice" target="_blank" title="chat admin">💬</a>
+
+<div class="footer">
+  popice umkm 2026 - dibikin dari rumah, dikirim dengan cinta <br>
+  <a href="popice-admin.html">masuk sebagai admin</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// config firebase project yang sama kaya punya admin
+var firebaseConfig = {
+  apiKey: "AIzaSyCJCq06Yu0aKSDMSaR3w0Q4WbXqaKFGSzw",
+    authDomain: "popice-app.firebaseapp.com",
+  projectId: "popice-app",
+    storageBucket: "popice-app.firebasestorage.app",
+  messagingSenderId: "945993424040",
+    appId: "1:945993424040:web:76edc9a947e25ce275f69d"
+}
+
+firebase.initializeApp(firebaseConfig)
+var db = firebase.firestore()
+
+var hargaProduk = {
+  "Mangga": 5000,
+    "Melon": 5000,
+  "Anggur": 5000,
+  "Leci": 5000,
+      "Strawberry": 5000,
+  "Cokelat": 5000
+}
+
+var keranjang = {
+  "Mangga": 0,
+    "Melon": 0,
+  "Anggur": 0,
+  "Leci": 0,
+      "Strawberry": 0,
+  "Cokelat": 0
+}
+
+function tampilToast(pesan){
+
+  var t = document.getElementById("toast")
+  t.innerHTML = pesan
+    t.style.display = "block"
+
+  setTimeout(function(){
+      t.style.display = "none"
+  }, 2000)
+
+}
+
+function tambahProduk(nama, stok){
+
+  if(keranjang[nama] >= stok){
+      tampilToast("stok " + nama + " udah abis")
+    return
+  }
+
+  keranjang[nama] = keranjang[nama] + 1
+
+  document.getElementById("qty-" + nama).innerHTML = keranjang[nama]
+
+  updateTampilan()
+
+}
+
+function kurangProduk(nama){
+
+  if(keranjang[nama] > 0){
+      keranjang[nama] = keranjang[nama] - 1
+  }
+
+  document.getElementById("qty-" + nama).innerHTML = keranjang[nama]
+
+  updateTampilan()
+
+}
+
+function updateTampilan(){
+
+  var total = 0
+  var daftar = []
+
+    for(var nama in keranjang){
+    if(keranjang[nama] > 0){
+      total = total + (hargaProduk[nama] * keranjang[nama])
+        daftar.push("Popice " + nama + " x" + keranjang[nama])
+    }
+  }
+
+  var totalFormat = total.toLocaleString("id-ID")
+
+  if(daftar.length == 0){
+    document.getElementById("hasilKeranjang").innerHTML = "keranjang kosong"
+  } else {
+      var teks = daftar.join(", ") + "<br>total: Rp " + totalFormat
+    document.getElementById("hasilKeranjang").innerHTML = teks
+  }
+
+}
+
+function checkoutWa(){
+
+  var total = 0
+  var daftar = []
+  var itemsUntukDb = []
+
+  for(var nama in keranjang){
+    if(keranjang[nama] > 0){
+        total = total + (hargaProduk[nama] * keranjang[nama])
+      daftar.push("Popice " + nama + " x" + keranjang[nama])
+        itemsUntukDb.push({ produk: nama, jumlah: keranjang[nama] })
+    }
+  }
+
+  if(daftar.length == 0){
+    tampilToast("keranjang masih kosong nih, pilih dulu popice nya ya")
+      return
+  }
+
+  var totalFormat = total.toLocaleString("id-ID")
+
+  var namaGabung = daftar.join(", ")
+
+  // kirim pesanan ke firestore biar muncul di panel admin buat dikonfirmasi
+  db.collection("pesanan").add({
+      items: itemsUntukDb,
+    total: total,
+      status: "menunggu",
+    waktu: firebase.firestore.FieldValue.serverTimestamp()
+  })
+
+  var nomorWa = "6281288848438"
+
+  var pesan = "halo ka mau order *" + namaGabung + "* dengan harga *Rp " + totalFormat + "*"
+
+  var link = "https://wa.me/" + nomorWa + "?text=" + encodeURIComponent(pesan)
+
+  window.open(link, "_blank")
+
+  // reset keranjang abis checkout
+  for(var n in keranjang){
+      keranjang[n] = 0
+    document.getElementById("qty-" + n).innerHTML = 0
+  }
+  updateTampilan()
+
+}
+
+</script>
+
+</body>
+</html>
